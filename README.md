@@ -1,6 +1,14 @@
 # LittleFish
 
-TODO: Write a gem description
+This gem is a little tool for pulling infomation from boston bigpicture, which is a news site with beautiful photos.
+The reutrn info format is a data sructure looks like:
+
+    bp: info
+      description : text
+      image_list : list
+        image_url : string
+        desc : text
+  
 
 ## Installation
 
@@ -17,8 +25,19 @@ Or install it yourself as:
     $ gem install little_fish
 
 ## Usage
+1. demo
+  little_fish --help
 
-TODO: Write usage instructions here
+2. add this line in your application
+ 
+```ruby 
+require 'little_fish'
+fisher = LittleFish::Fisher.new do |f|
+  f.last_nth_item = 0 #0 for latest post, and 1 means the last one, 2 means the one before last post, eg.
+  f.dumpfile = 'temp.txt'#if not assigned, filename will be named by datetime. if assigned 'no', 'none', or 'false', it wont dump out any file
+end
+info = fisher.pull
+```
 
 ## Contributing
 
