@@ -1,5 +1,5 @@
-require "little_fish/version"
+$: << File.dirname(__FILE__)
 
-module LittleFish
-  # Your code goes here...
-end
+require "little_fish/version"
+require "little_fish/fisher"
+require "little_fish/runner"
