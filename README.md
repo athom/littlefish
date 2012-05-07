@@ -34,11 +34,17 @@ There are two use scenarios
 
 1. command line application 
   usually you can just type: 
+
     little_fish  
-  for downdoading:
+
+  for downdoading: 
+
     little_fish -d
-  more details plz dont be hesitated to call for help
+
+  more details plz dont be hesitated to call for help 
+
     little_fish --help
+
 
 2. usage in your application 
   
