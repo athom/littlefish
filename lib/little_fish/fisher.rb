@@ -3,10 +3,11 @@ require 'rss/2.0'
 require 'nokogiri'
 require 'open-uri'
 require 'timeout'
+require 'net/http'
 
 module LittleFish
   class Fisher
-    attr_accessor :url, :last_nth_item, :dumpfile
+    attr_accessor :url, :last_nth_item, :dumpfile, :download
     def initialize
       if block_given?
         yield self
@@ -14,6 +15,7 @@ module LittleFish
         @url = 'http://feeds.boston.com/boston/bigpicture/index'
         @last_nth_item = 0
         @dumpfile = './pic_output_' + Time.now.strftime('%H-%M-%S') + '.txt'
+        @download = false
       end
     end
 
@@ -30,10 +32,17 @@ module LittleFish
       unless ['none', 'NONE', 'no', 'NO', 'false', 'FALSE'].include? @dumpfile
         info 'dumping bp_info ... '
         f = File.new(@dumpfile, 'w') 
-        bp_info[:images].each do |imgs|
-          f.puts imgs
+        bp_info[:images].each do |img|
+          f.puts img
         end
         info 'saved info in ' +  @dumpfile
+      end
+
+      if @download
+        info 'down loading photos ... '
+        urls = bp_info[:images].map{|img| img[:url]}
+        download(urls, 'lf_download')
+        info 'photos downloaded!'
       end
 
       bp_info
@@ -105,10 +114,17 @@ module LittleFish
       both.each do |e|
         img_url =  e.children[1].attributes['src'].value
         img_info = e.children.last.content
-        img_list << { img_url => img_info }
+        img_list << { :url =>img_url, :desc => img_info }
       end
       bp_info[:images] = img_list
       bp_info
+    end
+
+    def download (urls, dir)
+      Dir.mkdir(dir) unless Dir.exists? dir
+      urls.each do |url|
+        `wget -c #{url} -P #{dir}`
+      end
     end
   end
 end
