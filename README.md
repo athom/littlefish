@@ -3,12 +3,17 @@
 This gem is a little tool for pulling infomation from boston bigpicture, which is a news site with beautiful photos.
 The reutrn info format is a data sructure looks like:
 
-    bp: info
-      description : text
-      image_list : list
-        image_url : string
-        desc : text
-  
+```ruby
+bp_info{
+  :total_desc => "description for the whole theme of all photos"
+  :image_list => [
+    image{
+      :url => url
+      :desc => "description for the single photo"
+    }
+  ]#list of photos
+}
+```
 
 ## Installation
 
@@ -25,11 +30,18 @@ Or install it yourself as:
     $ gem install little_fish
 
 ## Usage
-1. demo
-  little_fish --help
+There are two use scenarios
 
-2. add this line in your application
- 
+1. command line application 
+  usually you can just type: 
+    little_fish  
+  for downdoading:
+    little_fish -d
+  more details plz dont be hesitated to call for help
+    little_fish --help
+
+2. usage in your application 
+  
 ```ruby 
 require 'little_fish'
 fisher = LittleFish::Fisher.new do |f|
@@ -37,6 +49,8 @@ fisher = LittleFish::Fisher.new do |f|
   f.dumpfile = 'temp.txt'#if not assigned, filename will be named by datetime. if assigned 'no', 'none', or 'false', it wont dump out any file
 end
 info = fisher.pull
+
+urls = info[:images].map{|e| e[:url]} #to get the urls
 ```
 
 ## Contributing
